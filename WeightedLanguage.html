@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=1080, initial-scale=1.0">
+    <title>Weighted Language</title>
+</head>
+<body>
+<pre>How to use:
+
+Use the Text are below to specify a set of production rules. 
+
+rules are specified by a string in the format of regular expressions, followed by indented strings specifying all the possible strings that can replace the string above. One of those indended strings will be picked at random, and a weight can be specified after each to skew the random picking. Is a weight not specified, it is assumed "1".
+
+    <textarea name="rules" id="rulearea" cols="50" rows="15">
+"S"
+    "ONC" 5
+    "sPNC" 1
+"O"
+    "s"
+    "p"
+    "t"
+    "k"
+    "m"
+    "n"
+    "v"
+    "f"
+    "" 6
+"N"
+    "i"
+    "u"
+    "a" 5
+"C"
+    "ng"
+    "n"
+    ""
+"P"
+    "p"
+    "t"
+    "k"
+"(m|n|v)(u)(n\b)"
+    "$1o$3"</textarea>
+    <button id="produce">Produce words</button>
+
+    <label for="">Number of words to Produce</label>
+    <input type="number" value="100" id="num">
+    <pre id="out"></pre>
+    <script>
+        let outelement = document.querySelector("#out");
+        let rules = [];
+
+        document.querySelector("#produce").addEventListener("click", () => {
+            let out = ""
+            let ruletext = document.querySelector("#rulearea").value.split(/\r?\n/);
+            let num = document.querySelector("#num").value;
+
+
+            for (let i = 0; i < ruletext.length; i++) {
+                if(ruletext[i].match(/^ +/)){
+                    let param = ruletext[i].split(/\"/);
+                    let text = param[1];
+                    let weight = param[2].trim();
+                    if(weight == "") weight = 1;
+                    else weight = +weight;
+                    rules[rules.length - 1].replacelist.push({replace: text, weight: weight})
+                }else{
+                    let text = ruletext[i].slice(1, -1);
+                    rules.push({rule: text, replacelist: []} );
+                }
+            }
+
+            //console.log(rules)
+
+            for (let i = 0; i < num; i++) {
+                let final = "S";
+                let changesHasHappened = true;
+                while(changesHasHappened){
+                    changesHasHappened = false;
+                    rules.forEach(rule => {
+                        let regex = new RegExp(rule.rule);
+                        let replacerMaxInt = function () {
+                            let ret = 0;
+                            rule.replacelist.forEach(possibleReplacer => {
+                                ret += possibleReplacer.weight;
+                            });
+                            return ret;
+                        }();
+                        let replacerInt = Math.floor(Math.random() * replacerMaxInt);
+                        let replacer = function (){
+                            let pick = -1;
+                            let thrs = 0;
+                            do{
+                                thrs += rule.replacelist[++pick].weight;
+                            } while(!(thrs > replacerInt))
+
+                            return rule.replacelist[pick].replace;
+                        }();
+                        let newFinal = final.replace(regex, replacer);
+                        if(!changesHasHappened) changesHasHappened = final != newFinal;
+                        final = newFinal;
+                    });
+                }
+                out += final + "\n";
+            }
+
+            outelement.innerHTML = out;
+        }); 
+    </script>
+</body>
+</html>
