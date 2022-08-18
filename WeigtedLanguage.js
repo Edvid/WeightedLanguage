@@ -28,8 +28,13 @@ document.querySelector("#produce").addEventListener("click", () => {
         transcriptionRules.push({rule: match[1], replace: match[2]})
     }
 
-    console.log(transcriptionRules)
     //console.log(Productionrules)
+    
+    let table = document.createElement("table");
+
+    outelement.innerHTML = "";
+
+    outelement.appendChild(table);
 
     let i = 0;
     while (i < num) {
@@ -61,18 +66,24 @@ document.querySelector("#produce").addEventListener("click", () => {
             });
         }
         if(!~out.indexOf(final) || !deleteDuplicates){
-            out.push(final);
+            let tr =  document.createElement("tr");
+            let td = document.createElement("td");
+            tr.appendChild(td);
+            td.innerText = final;
+            table.appendChild(tr);
             i++;
         }
     }
 
-    for (let i = 0; i < out.length; i++) {
-        let transcription = out[i];
+    for (let i = 0; i < num; i++) {
+        let tr = table.querySelector(`tr:nth-child(${+i + 1})`);
+        let transcription = tr.querySelector("td").innerText;
         transcriptionRules.forEach(rule => {
             transcription = transcription.replaceAll(new RegExp(rule.rule, 'g'), rule.replace)
         })
-        out[i] += "\t" + transcription;
-    }
+        let td = document.createElement("td");
+        tr.appendChild(td);
 
-    outelement.value = out.join("\r\n");
+        td.innerText = transcription;
+    }
 });

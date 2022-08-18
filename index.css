@@ -12,3 +12,11 @@ pre{
 #textareacontainer > * {
     margin: 5px;
 }
+
+table {
+    width: 50%;
+}
+
+tr > td:last-child {
+    text-align: right;
+}
