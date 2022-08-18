@@ -1,27 +1,35 @@
 let outelement = document.querySelector("#out");
-let rules = [];
 
 document.querySelector("#produce").addEventListener("click", () => {
+    let productionRules = [];
+    let transcriptionRules = [];
     let out = [];
-    let ruletext = document.querySelector("#rulearea").value.split(/\r?\n/);
+    let prodtext = document.querySelector("#rulearea").value.split(/\r?\n/);
+    let transtext = document.querySelector("#transcriptionarea").value.split(/\r?\n/);
     let num = document.querySelector("#num").value;
     let deleteDuplicates = document.querySelector("#deleteduplicates").checked;
 
-    for (let i = 0; i < ruletext.length; i++) {
-        if(ruletext[i].match(/^ +/)){
-            let param = ruletext[i].split(/\"/);
+    for (let i = 0; i < prodtext.length; i++) {
+        if(prodtext[i].match(/^ +/)){
+            let param = prodtext[i].split(/\"/);
             let text = param[1];
             let weight = param[2].trim();
             if(weight == "") weight = 1;
             else weight = +weight;
-            rules[rules.length - 1].replacelist.push({replace: text, weight: weight})
+            productionRules[productionRules.length - 1].replacelist.push({replace: text, weight: weight})
         }else{
-            let text = ruletext[i].trim().slice(1, -1);
-            rules.push({rule: text, replacelist: []} );
+            let text = prodtext[i].trim().slice(1, -1);
+            productionRules.push({rule: text, replacelist: []} );
         }
     }
 
-    //console.log(rules)
+    for (let i = 0; i < transtext.length; i++) {
+        let match = transtext[i].match(/^\"(.*)\" ?-\> ?\"(.*)\"$/);
+        transcriptionRules.push({rule: match[1], replace: match[2]})
+    }
+
+    console.log(transcriptionRules)
+    //console.log(Productionrules)
 
     let i = 0;
     while (i < num) {
@@ -29,8 +37,7 @@ document.querySelector("#produce").addEventListener("click", () => {
         let changesHasHappened = true;
         while(changesHasHappened){
             changesHasHappened = false;
-            rules.forEach(rule => {
-                let regex = new RegExp(rule.rule);
+            productionRules.forEach(rule => {
                 let replacerMaxInt = function () {
                     let ret = 0;
                     rule.replacelist.forEach(possibleReplacer => {
@@ -48,7 +55,7 @@ document.querySelector("#produce").addEventListener("click", () => {
 
                     return rule.replacelist[pick].replace;
                 }();
-                let newFinal = final.replace(regex, replacer);
+                let newFinal = final.replace(new RegExp(rule.rule), replacer);
                 if(!changesHasHappened) changesHasHappened = final != newFinal;
                 final = newFinal;
             });
@@ -59,5 +66,13 @@ document.querySelector("#produce").addEventListener("click", () => {
         }
     }
 
-    outelement.innerHTML = out.join("\r\n");
+    for (let i = 0; i < out.length; i++) {
+        let transcription = out[i];
+        transcriptionRules.forEach(rule => {
+            transcription = transcription.replaceAll(new RegExp(rule.rule, 'g'), rule.replace)
+        })
+        out[i] += "\t" + transcription;
+    }
+
+    outelement.value = out.join("\r\n");
 });

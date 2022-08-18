@@ -4,17 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=1080, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
     <title>Weighted Language</title>
 </head>
 <body>
 <pre>How to use:
 
-Use the Text are below to specify a set of production rules. 
+Use the Textareas are below to specify a set of production rules for your grammar and how to transcribe the produced words. 
 
-rules are specified by a string in the format of regular expressions, followed by indented strings specifying all the possible strings that can replace the string above. One of those indended strings will be picked at random, and a weight can be specified after each to skew the random picking. Is a weight not specified, it is assumed "1".
+Production rules are specified by a string in the format of regular expressions, followed by indented strings specifying all the possible strings that can replace the string above. One of those indended strings will be picked at random, and a weight can be specified after each to skew the random picking. Is a weight not specified, it is assumed "1".
+
+Transciption specifies how one regular expression match may be transcribed. Each match can only produce one possible transcription, so the formatting in this textarea is different. It goes "MATCH" -> "TRANSCRIPTION" each on their own line.
 </pre>
-    <textarea name="rules" id="rulearea" cols="50" rows="15">
+<div id="textareacontainer">
+
+    <label>Production Rule Area</label>
+    <label>Transcribe</label>
+    <textarea spellcheck="false"name="rules" id="rulearea" cols="50" rows="15">
 "S"
+    "[Y]"
+    "[Y.Y]"
+"Y"
     "ONC" 5
     "sPNC" 1
 "O"
@@ -32,7 +42,7 @@ rules are specified by a string in the format of regular expressions, followed b
     "u"
     "a" 5
 "C"
-    "ng"
+    "ŋ"
     "n"
     ""
 "P"
@@ -41,6 +51,12 @@ rules are specified by a string in the format of regular expressions, followed b
     "k"
 "(m|n|v)(u)(n\b)"
     "$1o$3"</textarea>
+    <textarea spellcheck="false" name="transcription" id="transcriptionarea" cols="50" rows="15">
+"\." -> ""
+"\[" -> "&lt"
+"\]" -> "&gt"
+"ŋ" -> "ng"</textarea>
+</div>
     <br>
     <br>
     <input type="checkbox" id="deleteduplicates"> <label>Remove Duplicates</label>
@@ -49,8 +65,9 @@ rules are specified by a string in the format of regular expressions, followed b
     <br>
     <br>
     <button id="produce">Produce words</button>
-
-    <pre id="out"></pre>
+    <br>
+    <br>
+    <textarea spellcheck="false" name="out" id="out" cols="30" rows="30"></textarea>
     <script src="WeigtedLanguage.js"></script>
 </body>
 </html>

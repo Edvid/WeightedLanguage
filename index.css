@@ -1,0 +1,14 @@
+pre{
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+#textareacontainer{
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    grid-template-rows: auto;
+}
+
+#textareacontainer > * {
+    margin: 5px;
+}
