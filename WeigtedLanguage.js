@@ -2,10 +2,10 @@ let outelement = document.querySelector("#out");
 let rules = [];
 
 document.querySelector("#produce").addEventListener("click", () => {
-    let out = ""
+    let out = [];
     let ruletext = document.querySelector("#rulearea").value.split(/\r?\n/);
     let num = document.querySelector("#num").value;
-
+    let deleteDuplicates = document.querySelector("#deleteduplicates").checked;
 
     for (let i = 0; i < ruletext.length; i++) {
         if(ruletext[i].match(/^ +/)){
@@ -23,7 +23,8 @@ document.querySelector("#produce").addEventListener("click", () => {
 
     //console.log(rules)
 
-    for (let i = 0; i < num; i++) {
+    let i = 0;
+    while (i < num) {
         let final = "S";
         let changesHasHappened = true;
         while(changesHasHappened){
@@ -52,8 +53,11 @@ document.querySelector("#produce").addEventListener("click", () => {
                 final = newFinal;
             });
         }
-        out += final + "\n";
+        if(!~out.indexOf(final) || !deleteDuplicates){
+            out.push(final);
+            i++;
+        }
     }
 
-    outelement.innerHTML = out;
+    outelement.innerHTML = out.join("\r\n");
 });

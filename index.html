@@ -12,7 +12,7 @@
 Use the Text are below to specify a set of production rules. 
 
 rules are specified by a string in the format of regular expressions, followed by indented strings specifying all the possible strings that can replace the string above. One of those indended strings will be picked at random, and a weight can be specified after each to skew the random picking. Is a weight not specified, it is assumed "1".
-
+</pre>
     <textarea name="rules" id="rulearea" cols="50" rows="15">
 "S"
     "ONC" 5
@@ -41,10 +41,15 @@ rules are specified by a string in the format of regular expressions, followed b
     "k"
 "(m|n|v)(u)(n\b)"
     "$1o$3"</textarea>
+    <br>
+    <br>
+    <input type="checkbox" id="deleteduplicates"> <label>Remove Duplicates</label>
+    <br>
+    <input type="number" value="100" id="num"> <label>Number of words to Produce</label>
+    <br>
+    <br>
     <button id="produce">Produce words</button>
 
-    <label for="">Number of words to Produce</label>
-    <input type="number" value="100" id="num">
     <pre id="out"></pre>
     <script src="WeigtedLanguage.js"></script>
 </body>
