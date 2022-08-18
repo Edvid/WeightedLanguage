@@ -16,7 +16,7 @@ document.querySelector("#produce").addEventListener("click", () => {
             else weight = +weight;
             rules[rules.length - 1].replacelist.push({replace: text, weight: weight})
         }else{
-            let text = ruletext[i].slice(1, -1);
+            let text = ruletext[i].trim().slice(1, -1);
             rules.push({rule: text, replacelist: []} );
         }
     }
