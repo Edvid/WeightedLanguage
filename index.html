@@ -59,15 +59,20 @@ Transciption specifies how one regular expression match may be transcribed. Each
 </div>
     <br>
     <br>
+    <label>Seed (leave blank for random): </label> <input type="text" value="" id="seed">
+    <br>
     <input type="checkbox" id="deleteduplicates"> <label>Remove Duplicates</label>
     <br>
-    <input type="number" value="100" id="num"> <label>Number of words to Produce</label>
+    <label>Number of words to Produce: </label> <input type="number" value="100" id="num">
     <br>
     <br>
     <button id="produce">Produce words</button>
     <br>
     <br>
     <div id="out"></div>
+    <script src="hashcode.js"></script>
+    <script src="lcg.js"></script>
+
     <script src="WeigtedLanguage.js"></script>
 </body>
 </html>

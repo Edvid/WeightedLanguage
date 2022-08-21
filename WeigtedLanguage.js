@@ -1,6 +1,18 @@
 let outelement = document.querySelector("#out");
 
 document.querySelector("#produce").addEventListener("click", () => {
+    let randomNum;
+    let seedtext = document.querySelector("#seed").value;
+    if (seedtext == ""){
+        randomNum = Math.random();
+    }
+    else if(!/^\d+$/.test(seedtext)) {
+        randomNum = (seedtext).hashCode();
+        randomNum *= randomNum < 0 ? -1 : 1;
+    }
+    else {
+        randomNum = seedtext;
+    }
     let productionRules = [];
     let transcriptionRules = [];
     let out = [];
@@ -50,7 +62,8 @@ document.querySelector("#produce").addEventListener("click", () => {
                     });
                     return ret;
                 }();
-                let replacerInt = Math.floor(Math.random() * replacerMaxInt);
+                let replacerInt = randomNum % replacerMaxInt;
+                randomNum = lcg(randomNum);
                 let replacer = function (){
                     let pick = -1;
                     let thrs = 0;
